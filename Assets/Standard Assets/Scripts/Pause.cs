@@ -8,7 +8,7 @@ public class Pause : MonoBehaviour {
 	    if (Input.GetKeyDown(KeyCode.Escape))
         {
             Screen.lockCursor = false;
-            Time.timeScale = 0;
+            Time.timeScale = 0.1f;
         }
 	}
 
