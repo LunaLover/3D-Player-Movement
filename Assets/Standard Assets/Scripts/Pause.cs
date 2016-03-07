@@ -13,10 +13,11 @@ public class Pause : MonoBehaviour {
 	}
 
 
-    {
-        if (Time.timeScale = 0f, && Input.GetKeyDown(KeyCode.Escape))
-        {
-
-        }
-    }*/
+//	void Unpause ()
+//	{
+//        if (Time.timeScale = 0f && Input.GetKeyDown(KeyCode.Escape))
+//        {
+//
+//        }
+//}
 }
