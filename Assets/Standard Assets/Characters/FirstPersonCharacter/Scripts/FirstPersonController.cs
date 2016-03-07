@@ -41,6 +41,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        public bool NotPaused;
 
         // Use this for initialization
         private void Start()
@@ -234,7 +235,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+            if(NotPaused = true)
+            {
+                m_MouseLook.LookRotation(transform, m_Camera.transform);
+            }
         }
 
 
@@ -252,6 +256,17 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 return;
             }
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
+        }
+
+        private void Pause()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                NotPaused = false;
+                //m_MouseLook.LookRotation(transform, m_Camera.transform);
+            }
+
+
         }
     }
 }
