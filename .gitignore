@@ -79,3 +79,5 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+Assets/Standard Assets/Scripts/New Material.mat
+Assets/Scenes/LevelCam.unity.meta

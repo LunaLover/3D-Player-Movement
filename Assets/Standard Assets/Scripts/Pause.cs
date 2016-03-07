@@ -12,7 +12,7 @@ public class Pause : MonoBehaviour {
         }
 	}
 
-  /*  void UnPause()
+
     {
         if (Time.timeScale = 0f, && Input.GetKeyDown(KeyCode.Escape))
         {
