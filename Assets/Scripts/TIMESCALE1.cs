@@ -6,7 +6,7 @@ public class TIMESCALE1 : MonoBehaviour {
     [SerializeField]
     float Thyme = 1;
 
-	void Update ()
+	void Start ()
     {
         Time.timeScale = Thyme;
 	}
