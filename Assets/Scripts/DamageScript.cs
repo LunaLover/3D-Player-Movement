@@ -10,7 +10,7 @@ public class DamageScript : MonoBehaviour
 		if(col.transform.root != transform.root && col.tag != "Ground" && !col.isTrigger)
 		{
 			//If the enemy has been hit condition.
-			if(!col.transform.GetComponent<PlayerController>().damage)
+			if(!col.transform.GetComponent<PlayerController>().damage && !col.transform.GetComponent<PlayerController>().blocking)
 			{
 				//Tells the script of the enemy that they've been hit.
 				col.transform.GetComponent<PlayerController>().damage = true;

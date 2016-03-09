@@ -58,7 +58,8 @@ public class PlayerController : MonoBehaviour
 	float[] attackTimer = new float[2];
 	int[] timesPressed = new int[2];
 
-    //UI stuff
+    //Blocking variables
+    public bool blocking;
 	#endregion
 
 	//Start, what happens at the begining of the scene.
@@ -145,11 +146,15 @@ public class PlayerController : MonoBehaviour
 			movement = Vector3.zero;
 		}
 
-		if (!crouch)
-			playerRigidbody.AddForce (movement * maxSpeed);
-		else
-			playerRigidbody.velocity = Vector3.zero;
-	}
+		if (!crouch && !damage && !blocking)
+        {
+            playerRigidbody.AddForce(movement * maxSpeed);
+        }
+        else
+        {
+            playerRigidbody.velocity = Vector3.zero;
+        }
+    }
 	//Makes sure that the players are constantly facing eachother.
 	void ScaleCheck()
 	{
@@ -263,6 +268,7 @@ public class PlayerController : MonoBehaviour
 		animator.SetFloat ("Movement", Mathf.Abs (horizontal));
 		animator.SetBool ("Attack1", attack[0]);
 		animator.SetBool ("Attack2", attack[1]);
+        animator.SetBool("Blocking", blocking);
 
 	}
 	//Detector for being on the ground.
