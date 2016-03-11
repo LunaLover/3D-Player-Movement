@@ -3,50 +3,39 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour 
 {
-	#region Variables
-	//The numerical ID of the player.
 	[SerializeField]
-	int PlayerNumber;
+	int PlayerNumber = 1;
 
-	[SerializeField]
-	bool AICharacter;
+	Transform enemy;
 
-	//Transform of the other player.
-	public Transform enemy;
-
-	//Component references
 	Rigidbody2D rigidbody2D;
 	Animator animator;
 
-	//Movement variables
 	float horizontal;
 	float vertical;
 
 	[SerializeField]
 	float maxSpeed = 25;
-
 	Vector3 movement;
 	bool crouch;
 
-	//Jump variables
 	[SerializeField]
 	float jumpForce = 20;
 
     [SerializeField]
 	float jumpDuration = 0.1f;
 
-	float hopDuration;
-	float hopForce;
-	public bool jumpKey;
-	bool falling;
-	bool onGround;
-
-	//Attack variables
 	[SerializeField]
 	float noDamageTimer;
 
 	public bool damage;
 	float noDamage =  1;
+
+	float hopForce;
+	float hopDuration;
+	bool jumpKey;
+	bool falling;
+	bool onGround;
 
 	public bool specialAttack;
 	public GameObject projectile;
@@ -57,7 +46,6 @@ public class PlayerController : MonoBehaviour
 	bool[] attack = new bool[2];
 	float[] attackTimer = new float[2];
 	int[] timesPressed = new int[2];
-	#endregion
 
 	//Start, what happens at the begining of the scene.
 	void Start()
@@ -72,14 +60,6 @@ public class PlayerController : MonoBehaviour
 		foreach(GameObject player in players)
 		{
 			enemy = player.transform;
-		}
-
-		if (AICharacter) 
-		{
-			if (!GetComponent<AICharacter>())
-			{
-				gameObject.AddComponent<AICharacter>();
-			}
 		}
 	}
 	//Update, everything that happens every frame.
@@ -142,8 +122,8 @@ public class PlayerController : MonoBehaviour
 	{
 		if (transform.position.x < enemy.position.x)
 			transform.localScale = new Vector3 (-1, 1, 1);
-		else if (transform.position.x > enemy.position.x)
-			transform.localScale = new Vector3 (1, 1, 1);
+		else
+			transform.localScale = Vector3.one;
 	}
 	//Timers between attacks and limits to how many times you can attack within an instance.
 	void AttackInput()
@@ -219,12 +199,13 @@ public class PlayerController : MonoBehaviour
 			GameObject pr = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
 			Vector3 nrDir = new Vector3(enemy.position.x, transform.position.y, 0);
 			Vector3 dir = nrDir - transform.position;
-			pr.GetComponent<Rigidbody2D>().AddForce(dir * 10, ForceMode2D.Impulse);
+			pr.GetComponent<Rigidbody2D>().AddForce(dir * 100, ForceMode2D.Impulse);
 
 			specialAttack = false;
 		}
 	}
 	*/
+
 	//Changes the gravity, (players movement ability) depending on if you are on the ground or in the air.
 	void OnGroundCheck()
 	{
