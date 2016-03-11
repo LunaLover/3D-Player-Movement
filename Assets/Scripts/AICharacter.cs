@@ -90,6 +90,7 @@ public class AICharacter : MonoBehaviour
 		}
 
         Blocking();
+        Jumping();
 	}
 
 	void AIAgent()
@@ -324,7 +325,15 @@ public class AICharacter : MonoBehaviour
         {
             jumpRate = ReturnRandom();
 
-            if(jumpRate)
+            if(jumpRate < 50)
+            {
+                jump = true;
+            }
+            else
+            {
+                jump = false;
+            }
+            jumpTimer = 0;
         }
     }
 
