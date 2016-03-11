@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
 	//Timers between attacks and limits to how many times you can attack within an instance.
 	void AttackInput()
 	{
-		if (Input.GetButtonDown ("Attack1" + PlayerNumber.ToString ()))
+		if (Input.GetButtonDown ("Fire" + PlayerNumber.ToString ()))
 		{
 			attack[0] = true;
 			attackTimer[0] = 0;
@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonDown ("Attack2" + PlayerNumber.ToString ()))
+		if (Input.GetButtonDown ("Fire" + PlayerNumber.ToString ()))
 		{
 			attack[1] = true;
 			attackTimer[1] = 0;
