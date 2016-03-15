@@ -9,6 +9,12 @@ public class Pause : MonoBehaviour
 
     void Update()
     {
+        PauseGame();
+        CheckGameOver();
+    }
+
+    void PauseGame()
+    {
         if (Input.GetButtonDown("Escape"))
         {
             pause.SetActive(true);
@@ -21,5 +27,10 @@ public class Pause : MonoBehaviour
             Debug.Log("Unpause");
             Time.timeScale = 1;
         }
+    }
+
+    void CheckGameOver()
+    {
+
     }
 }
