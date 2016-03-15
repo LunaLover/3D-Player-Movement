@@ -54,32 +54,40 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	float attackRate = 0.3f;
 
-	bool[] attack = new bool[2];
+	public bool[] attack = new bool[2];
 	float[] attackTimer = new float[2];
 	int[] timesPressed = new int[2];
 
 	//UI stuff
 	[SerializeField]
 
+    //Blocking variables
+    public bool blocking;
 	#endregion
 
 	//Start, what happens at the begining of the scene.
 	void Start()
 	{
+        //Getting the components used.
 		playerRigidbody = GetComponent<Rigidbody2D> ();
 		animator = GetComponentInChildren<Animator> ();
-
+        //Temporarily store the jump force.
 		hopForce = jumpForce;
-
+        //Gets all of the players in the scene using tags.
 		GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
 		foreach(GameObject player in players)
 		{
-			enemy = player.transform;
-		}
+            //If it's not this player it is an enemy.
+            if(player.transform != this.transform)
+            {
+                enemy = player.transform;
+            }
+        }
 
 		if (AICharacter) 
 		{
+            //Checks if it's an AI character.
 			if (!GetComponent<AICharacter>())
 			{
 				gameObject.AddComponent<AICharacter>();
@@ -97,6 +105,7 @@ public class PlayerController : MonoBehaviour
 		//SpecialAttack();
 		UpdateAnimator ();
 	}
+
 	//FixedUpdate, all of the physics in action.
 	void FixedUpdate()
 	{
@@ -144,7 +153,16 @@ public class PlayerController : MonoBehaviour
 			playerRigidbody.AddForce (movement * maxSpeed);
 		else
 			playerRigidbody.velocity = Vector3.zero;
-	}
+	
+		if (!crouch && !damage && !blocking)
+        {
+            playerRigidbody.AddForce(movement * maxSpeed);
+        }
+        else
+        {
+            playerRigidbody.velocity = Vector3.zero;
+        }
+    }
 	//Makes sure that the players are constantly facing eachother.
 	void ScaleCheck()
 	{
@@ -201,10 +219,14 @@ public class PlayerController : MonoBehaviour
 		if(damage)
 		{
 			noDamageTimer += Time.deltaTime;
-
+            Debug.Log("Damage");
 			if(noDamageTimer > noDamage)
 			{
-				damage = false;
+                if (PlayerNumber == 1)
+                {
+                    gameObject.GetComponent<PlayerHealth>().Damage();
+                }
+                damage = false;
 				noDamageTimer = 0;
 			}
 		}
@@ -254,6 +276,7 @@ public class PlayerController : MonoBehaviour
 		animator.SetFloat ("Movement", Mathf.Abs (horizontal));
 		animator.SetBool ("Attack1", attack[0]);
 		animator.SetBool ("Attack2", attack[1]);
+        animator.SetBool("Blocking", blocking);
 
 	}
 	//Detector for being on the ground.
