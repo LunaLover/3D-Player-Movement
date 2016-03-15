@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
 		if(damage)
 		{
 			noDamageTimer += Time.deltaTime;
-            Debug.Log("Damage");
+            //Debug.Log("Damage");
 			if(noDamageTimer > noDamage)
 			{
                 if (PlayerNumber == 1)
