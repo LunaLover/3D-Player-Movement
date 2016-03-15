@@ -64,6 +64,14 @@ public class AICharacter : MonoBehaviour
 
 	void Update ()
 	{
+		if (!enemyControls) 
+		{
+			enemyControls = playerControls.enemy.GetComponent<PlayerController> ();
+		}
+
+		CheckDistance ();
+		States ();
+		AIAgent ();
 	}
 
 	void States()
@@ -80,7 +88,110 @@ public class AICharacter : MonoBehaviour
 			ResetAI ();
 			break;
 		}
+
+        Blocking();
+        Jumping();
 	}
+
+	void AIAgent()
+	{
+		if (initiateAI) 
+		{
+			aiState = AIState.resetAI;
+            float multiplier = 0;
+
+
+            if (!gotRandom)
+            {
+                storeRandom = ReturnRandom();
+                gotRandom = true;
+            }
+
+            if(!closeCombat)
+            {
+                multiplier += 30;
+            }
+            else
+            {
+                multiplier -= 30;
+            }
+
+            if(storeRandom + multiplier < 50)
+            {
+                Attack();
+            }
+            else
+            {
+                Movement();
+            }
+
+		}
+			
+	}
+
+    void Attack()
+    {
+        if(!gotRandom)
+        {
+            storeRandom = ReturnRandom();
+            gotRandom = true;
+        }
+
+        if(storeRandom < 75)
+        {
+            if(!randomizeAttacks)
+            {
+                numberOfAttacks = (int)Random.Range(1, 4);
+                randomizeAttacks = true;
+            }
+
+            if (currentNumberAttacks < numberOfAttacks)
+            {
+                int attackNumber = Random.Range(0, playerControls.attack.Length);
+
+                playerControls.attack[attackNumber] = true;
+
+                currentNumberAttacks++;
+            }
+        }
+        else
+        {
+            if(currentNumberAttacks < 1)
+            {
+                playerControls.specialAttack = true;
+                currentNumberAttacks++;
+            }
+        }
+    }
+
+	void Movement()
+	{
+        if(!gotRandom)
+        {
+            storeRandom = ReturnRandom();
+            gotRandom = true;
+        }
+
+        if (storeRandom < 90)
+        {
+            if (playerControls.enemy.position.x < transform.position.x)
+            {
+                playerControls.horizontal = -1;
+            }
+            else
+            {
+                playerControls.horizontal = 1;
+            }
+        }
+		if (playerControls.enemy.position.x < transform.position.x)
+        {
+            playerControls.horizontal = -1;
+        }
+        else
+        {
+            playerControls.horizontal = 1;
+        }
+    }
 
 	void ResetAI()
 	{
@@ -89,6 +200,24 @@ public class AICharacter : MonoBehaviour
 		if(aiTimer > aiStateLife)
 		{
 			initiateAI = false;
+            playerControls.horizontal = 0;
+            playerControls.vertical = 0;
+            aiTimer = 0;
+
+            gotRandom = false;
+            storeRandom = ReturnRandom();
+
+            if(storeRandom < 50)
+            {
+                aiState = AIState.normalState;
+            }
+            else
+            {
+                aiState = AIState.closeState;
+            }
+
+            currentNumberAttacks = 1;
+            randomizeAttacks = false;
 		}
 	}
 
@@ -106,17 +235,55 @@ public class AICharacter : MonoBehaviour
 		else 
 		{
 			if(aiState != AIState.resetAI)
-				aiState = AIState.normalState;
-			/*
-			if (closeCombat)
+            {
+                aiState = AIState.normalState;
+            }
+            if (closeCombat)
 			{
+                if (!gotRandom)
+                {
+                    storeRandom = ReturnRandom();
+                    gotRandom = true;
+                }
 
+                if(storeRandom < 60)
+                {
+                    Movement();
+                }
 			}
-			*/
-
 			closeCombat = false;
 		}
 	}
+
+    void Blocking()
+    {
+        if (playerControls.damage)
+        {
+            if(!gotRandom)
+            {
+                storeRandom = ReturnRandom();
+                gotRandom = true;
+            }
+
+            if(storeRandom < 50)
+            {
+                blocking = true;
+                playerControls.damage = false;
+                playerControls.blocking = true;
+            }
+        }
+
+        if (blocking)
+        {
+            blockTimer += Time.deltaTime;
+
+            if(blockTimer > blockingRate)
+            {
+                playerControls.blocking = false;
+                blockTimer = 0;
+            }
+        }
+    }
 
 	void NormalState()
 	{
@@ -140,5 +307,39 @@ public class AICharacter : MonoBehaviour
 		}
 	}
 
+    void Jumping()
+    {
+        if(enemyControls.jumpKey || jump)
+        {
+            playerControls.vertical = 1;
+            jump = false;
+        }
+        else
+        {
+            playerControls.vertical = 0;
+        }
 
+        jumpTimer += Time.deltaTime;
+
+        if(jumpTimer > jumpRate*10)
+        {
+            jumpRate = ReturnRandom();
+
+            if(jumpRate < 50)
+            {
+                jump = true;
+            }
+            else
+            {
+                jump = false;
+            }
+            jumpTimer = 0;
+        }
+    }
+
+    float ReturnRandom()
+    {
+        float returnValue = Random.Range(0, 101);
+        return returnValue;
+    }
 }
