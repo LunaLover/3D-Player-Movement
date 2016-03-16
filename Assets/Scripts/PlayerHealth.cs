@@ -30,6 +30,10 @@ public class PlayerHealth : MonoBehaviour
 
     public void Damage()
     {
-        health.CurrentValue -= 5f;
+        health.CurrentValue -= 10f;
+        if (health.CurrentValue <= 0)
+        {
+            GM.instance.GameLost();
+        }
     }
 }

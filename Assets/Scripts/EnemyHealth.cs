@@ -32,7 +32,7 @@ public class EnemyHealth : MonoBehaviour
         health.CurrentValue -= 10f;
         if (health.CurrentValue <= 0)
         {
-            ParticleSystemGradientMode.
+            GM.instance.GameWon();
         }
     }
 }
