@@ -15,12 +15,12 @@ public class PlayerController : MonoBehaviour
 	public Transform enemy;
 
 	//Component references
-	Rigidbody2D rigidbody2D;
+	Rigidbody2D playerRigidbody;
 	Animator animator;
 
 	//Movement variables
-	float horizontal;
-	float vertical;
+	public float horizontal;
+	public float vertical;
 
 	[SerializeField]
 	float maxSpeed = 25;
@@ -54,28 +54,37 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	float attackRate = 0.3f;
 
-	bool[] attack = new bool[2];
+	public bool[] attack = new bool[2];
 	float[] attackTimer = new float[2];
 	int[] timesPressed = new int[2];
+
+    //Blocking variables
+    public bool blocking;
 	#endregion
 
 	//Start, what happens at the begining of the scene.
 	void Start()
 	{
-		rigidbody2D = GetComponent<Rigidbody2D> ();
+        //Getting the components used.
+		playerRigidbody = GetComponent<Rigidbody2D> ();
 		animator = GetComponentInChildren<Animator> ();
-
+        //Temporarily store the jump force.
 		hopForce = jumpForce;
-
+        //Gets all of the players in the scene using tags.
 		GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
 		foreach(GameObject player in players)
 		{
-			enemy = player.transform;
-		}
+            //If it's not this player it is an enemy.
+            if(player.transform != this.transform)
+            {
+                enemy = player.transform;
+            }
+        }
 
 		if (AICharacter) 
 		{
+            //Checks if it's an AI character.
 			if (!GetComponent<AICharacter>())
 			{
 				gameObject.AddComponent<AICharacter>();
@@ -93,16 +102,21 @@ public class PlayerController : MonoBehaviour
 		//SpecialAttack();
 		UpdateAnimator ();
 	}
+
 	//FixedUpdate, all of the physics in action.
 	void FixedUpdate()
 	{
-		horizontal = Input.GetAxis ("Horizontal" + PlayerNumber.ToString ());
-		vertical = Input.GetAxis ("Vertical" + PlayerNumber.ToString ());
-
+		if (!AICharacter) 
+		{
+			//Gets the h & v movement inputs and utilizes player numbers to recycle code.
+			horizontal = Input.GetAxis ("Horizontal" + PlayerNumber.ToString ());
+			vertical = Input.GetAxis ("Vertical" + PlayerNumber.ToString ());
+		}
+		//New vector, could also be Vector 2.
 		Vector3 movement = new Vector3 (horizontal, 0, 0);
-
+		//The standard for when the player is defined as crouching.
 		crouch = (vertical < -0.1f);
-
+		//If the vertical axis is greater than 0, the player is jumping.
 		if (vertical > 0.1f)
 		{
 			if(!jumpKey)
@@ -112,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
 				if(hopDuration < jumpDuration)
 				{
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, hopForce);
+					playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, hopForce);
 				}
 				else
 				{
@@ -132,11 +146,15 @@ public class PlayerController : MonoBehaviour
 			movement = Vector3.zero;
 		}
 
-		if (!crouch)
-			rigidbody2D.AddForce (movement * maxSpeed);
-		else
-			rigidbody2D.velocity = Vector3.zero;
-	}
+		if (!crouch && !damage && !blocking)
+        {
+            playerRigidbody.AddForce(movement * maxSpeed);
+        }
+        else
+        {
+            playerRigidbody.velocity = Vector3.zero;
+        }
+    }
 	//Makes sure that the players are constantly facing eachother.
 	void ScaleCheck()
 	{
@@ -193,10 +211,14 @@ public class PlayerController : MonoBehaviour
 		if(damage)
 		{
 			noDamageTimer += Time.deltaTime;
-
+            //Debug.Log("Damage");
 			if(noDamageTimer > noDamage)
 			{
-				damage = false;
+                if (PlayerNumber == 1)
+                {
+                    gameObject.GetComponent<PlayerHealth>().Damage();
+                }
+                damage = false;
 				noDamageTimer = 0;
 			}
 		}
@@ -205,9 +227,9 @@ public class PlayerController : MonoBehaviour
 		/*
 		if(!onGround)
 		{
-			rigidbody2D.gravityScale = 10;
+			playerRigidbody.gravityScale = 10;
 			Vector3 direction = enemy.position - transform.position;
-			rigidbody2D.AddForce (-direction * 25);
+			playerRigidbody.AddForce (-direction * 25);
 		}
 		*/
 	}
@@ -230,11 +252,11 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!onGround)
 		{
-			rigidbody2D.gravityScale = 5;
+			playerRigidbody.gravityScale = 5;
 		}
 		else
 		{
-			rigidbody2D.gravityScale = 1;
+			playerRigidbody.gravityScale = 1;
 		}
 	}
 	//Keeps the animator informed on what's happening.
@@ -246,6 +268,7 @@ public class PlayerController : MonoBehaviour
 		animator.SetFloat ("Movement", Mathf.Abs (horizontal));
 		animator.SetBool ("Attack1", attack[0]);
 		animator.SetBool ("Attack2", attack[1]);
+        animator.SetBool("Blocking", blocking);
 
 	}
 	//Detector for being on the ground.
