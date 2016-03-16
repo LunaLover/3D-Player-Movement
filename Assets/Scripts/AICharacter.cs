@@ -129,6 +129,7 @@ public class AICharacter : MonoBehaviour
 			
 	}
 
+
     void Attack()
     {
         if(!gotRandom)
