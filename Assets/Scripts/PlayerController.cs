@@ -58,6 +58,9 @@ public class PlayerController : MonoBehaviour
 	float[] attackTimer = new float[2];
 	int[] timesPressed = new int[2];
 
+	//UI stuff
+	[SerializeField]
+
     //Blocking variables
     public bool blocking;
 	#endregion
@@ -146,6 +149,11 @@ public class PlayerController : MonoBehaviour
 			movement = Vector3.zero;
 		}
 
+		if (!crouch)
+			playerRigidbody.AddForce (movement * maxSpeed);
+		else
+			playerRigidbody.velocity = Vector3.zero;
+	
 		if (!crouch && !damage && !blocking)
         {
             playerRigidbody.AddForce(movement * maxSpeed);

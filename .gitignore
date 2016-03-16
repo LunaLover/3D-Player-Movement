@@ -68,5 +68,10 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+<<<<<<< HEAD
+Assets/Standard Assets/Scripts/New Material.mat
+Assets/Scenes/LevelCam.unity.meta
+=======
 # Windows shortcuts
 *.lnk
+>>>>>>> refs/remotes/origin/master

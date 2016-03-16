@@ -1,10 +1,19 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 m_EditorVersion: 5.1.2f1
 =======
+=======
+>>>>>>> origin/master
 <<<<<<< HEAD
 m_EditorVersion: 5.3.3f1
 =======
 m_EditorVersion: 5.2.2f1
 >>>>>>> Nathan-B
+<<<<<<< HEAD
+>>>>>>> origin/master
+=======
+=======
+m_EditorVersion: 5.1.2f1
+>>>>>>> refs/remotes/origin/Nathan-W
 >>>>>>> origin/master
 m_StandardAssetsVersion: 0
