@@ -1,30 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Pause : MonoBehaviour
 {
+    [SerializeField]
+    GameObject pause;
+
     void Update()
     {
-        bool pressed = false;
-
-        if (Input.GetButtonDown("Escape") && (pressed == false))
-        {
-            Debug.Log("Pause");
-            Time.timeScale = 0;
-            pressed = true;
-            if (pressed == true)
-            {
-                
-            }
-        }
-
-        if (Input.GetButtonDown("Escape") && (pressed == true))
-        {
-            Debug.Log("Unpause");
-            Time.timeScale = 1;
-            pressed = false;
-        }
-
+        PauseGame();
+        CheckGameOver();
     }
 
+    void PauseGame()
+    {
+        if (Input.GetButtonDown("Escape"))
+        {
+            pause.SetActive(true);
+            Debug.Log("Pause");
+            Time.timeScale = 0;
+        }
+        else if (Input.GetButtonDown("Tab"))
+        {
+            pause.SetActive(false);
+            Debug.Log("Unpause");
+            Time.timeScale = 1;
+        }
+    }
+
+    void CheckGameOver()
+    {
+
+    }
 }

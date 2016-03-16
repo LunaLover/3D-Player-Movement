@@ -214,9 +214,14 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Damage");
 			if(noDamageTimer > noDamage)
 			{
+                //Debug.Log("Damage");
                 if (PlayerNumber == 1)
                 {
                     gameObject.GetComponent<PlayerHealth>().Damage();
+                }
+                else if (PlayerNumber == 2)
+                {
+                    gameObject.GetComponent<EnemyHealth>().Damage();
                 }
                 damage = false;
 				noDamageTimer = 0;

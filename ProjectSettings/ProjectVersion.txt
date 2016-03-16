@@ -1,6 +1,0 @@
-<<<<<<< HEAD
-m_EditorVersion: 5.3.3f1
-=======
-m_EditorVersion: 5.2.2f1
->>>>>>> Nathan-B
-m_StandardAssetsVersion: 0
