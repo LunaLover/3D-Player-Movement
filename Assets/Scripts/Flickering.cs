@@ -8,7 +8,7 @@ public class Flickering : MonoBehaviour {
 
 	void Update ()
     {
-	    if (Random.value > 0.8) // Says if randomly generated number is greater than 0.8,
+	    if (Random.value > 0.7) // Says if randomly generated number is greater than 0.8,
         {
 
             if (light.enabled == true) // if light is enabled,
